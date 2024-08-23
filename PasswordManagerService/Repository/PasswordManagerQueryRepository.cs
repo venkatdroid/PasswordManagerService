@@ -13,10 +13,10 @@ namespace PasswordManagerService.Repository
 
         public List<Password> GetAllPasswords()
         {
-            return _passwordManagerContext.Passwords.ToList();
+            return _passwordManagerContext.Passwords.AsNoTracking().ToList();
         }
 
-        public Password GetPassword(long id)
+        public Password GetPasswordById(long id)
         {
             return _passwordManagerContext.Passwords.AsNoTracking().FirstOrDefault(x => x.Id == id);
         }

@@ -5,7 +5,7 @@ namespace PasswordManagerService.Repository
     public interface IPasswordManagerQueryRepository
     {
         List<Password> GetAllPasswords();
-        Password GetPassword(long id);
+        Password GetPasswordById(long id);
 
     }
 }

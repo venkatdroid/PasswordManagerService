@@ -37,6 +37,11 @@ namespace PasswordManagerService.Controllers
         {
             try
             {
+                if (id <= 0) 
+                {
+                    return BadRequest("Id should be greater than zero");   
+                }
+
                 Password result = _processor.GetPasswordById(id, decryptPassword);
                 return Ok(result);
             }
@@ -67,7 +72,7 @@ namespace PasswordManagerService.Controllers
         {
             try
             {
-                bool result = _processor.UpdatePassword(passwordToBeUpdated);
+                bool result = _processor.UpdatePassword(id, passwordToBeUpdated);
                 return Ok(result);
             }
             catch (Exception ex)

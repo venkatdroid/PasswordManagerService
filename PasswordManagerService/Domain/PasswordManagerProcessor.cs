@@ -20,9 +20,21 @@ namespace PasswordManagerService.Domain
             return _commandRepository.CreateNewPassword(MapDomainModelToEntityModel(passwordToBeCreated));
         }
 
-        public bool UpdatePassword(DomainModel.Password passwordToBeUpdated)
+        public bool UpdatePassword(long id, DomainModel.Password passwordToBeUpdated)
         {
-            return _commandRepository.UpdatePassword(MapDomainModelToEntityModel(passwordToBeUpdated));
+            EntityModel.Password exisitingPassword = _queryRepository.GetPasswordById(id);
+
+            if (exisitingPassword == null) 
+            {
+                throw new InvalidOperationException("Password Not Found");
+            }
+
+            exisitingPassword.App = passwordToBeUpdated.App;
+            exisitingPassword.Username = passwordToBeUpdated.Username;
+            exisitingPassword.Category = passwordToBeUpdated.Category;
+            exisitingPassword.EncryptedPassword = Base64Decode(passwordToBeUpdated.EncryptedPassword);            
+
+            return _commandRepository.UpdatePassword(exisitingPassword);
         }
 
         public bool DeletePassword(long Id)
@@ -37,7 +49,7 @@ namespace PasswordManagerService.Domain
 
         public DomainModel.Password GetPasswordById(long Id, bool decryptPassword) 
         {
-            EntityModel.Password requestedPassword = _queryRepository.GetPassword(Id);
+            EntityModel.Password requestedPassword = _queryRepository.GetPasswordById(Id);
 
             if (requestedPassword == null) 
             {
