@@ -40,10 +40,9 @@ namespace PasswordManagerService.Controllers
         /// Get Password By Id
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="decryptPassword"></param>
         /// <returns> Returns Requested Password </returns>
         [HttpGet("{id}")]
-        public IActionResult GetPasswordById(long id, [FromQuery] bool decryptPassword)
+        public IActionResult GetPasswordById(long id)
         {
             try
             {
@@ -52,12 +51,37 @@ namespace PasswordManagerService.Controllers
                     return BadRequest("Id should be greater than zero");   
                 }
 
-                Password result = _processor.GetPasswordById(id, decryptPassword);
+                Password result = _processor.GetPasswordById(id);
                 return Ok(result);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error While Fetching GetPasswordById : {id} ,", ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get Decrypted Password By Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> Returns Requested Deccrypted Password </returns>
+        [HttpGet("{id}")]
+        public IActionResult GetDecryptedPasswordById(long id) 
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    return BadRequest("Id should be greater than zero");
+                }
+
+                Password result = _processor.GetDecryptedPasswordById(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error While Fetching GetDecryptedPasswordById : {id} ,", ex.Message);
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }

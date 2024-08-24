@@ -9,6 +9,7 @@ namespace PasswordManagerService.Domain
         bool UpdatePassword(long id, Password passwordToBeUpdated);
         bool DeletePassword(long Id);
         List<EntityModel.Password> GetAllPasswords();
-        Password GetPasswordById(long Id, bool decryptPassword);
+        Password GetPasswordById(long Id);
+        DecryptedPassword GetDecryptedPasswordById(long Id);
     }
 }

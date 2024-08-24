@@ -25,7 +25,7 @@ namespace PasswordManagerTests
         [Test]
         public void GetPasswordById_With0AsId()
         {
-            var result = passwordManagerController.GetPasswordById(0, true) as ObjectResult;       
+            var result = passwordManagerController.GetPasswordById(0) as ObjectResult;       
             Assert.AreEqual((int)HttpStatusCode.BadRequest, result.StatusCode);
         }
 

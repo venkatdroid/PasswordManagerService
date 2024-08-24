@@ -47,7 +47,7 @@ namespace PasswordManagerService.Domain
             return _queryRepository.GetAllPasswords();
         }
 
-        public DomainModel.Password GetPasswordById(long Id, bool decryptPassword) 
+        public DomainModel.Password GetPasswordById(long Id) 
         {
             EntityModel.Password requestedPassword = _queryRepository.GetPasswordById(Id);
 
@@ -58,13 +58,29 @@ namespace PasswordManagerService.Domain
 
             DomainModel.Password result = MapEntityModelToDomainModel(requestedPassword);
 
-            if (decryptPassword) 
+            return result;
+        }
+
+        public DomainModel.DecryptedPassword GetDecryptedPasswordById(long Id)
+        {
+            EntityModel.Password requestedPassword = _queryRepository.GetPasswordById(Id);
+
+            if (requestedPassword == null)
             {
-                result.DecryptedPassword = Base64Decode(result.EncryptedPassword);
+                throw new Exception("Id Not Found !");
             }
 
+            DomainModel.DecryptedPassword result = new DomainModel.DecryptedPassword()
+            {
+                App = requestedPassword.App,
+                Username = requestedPassword.Username,
+                Category = requestedPassword.Category,
+                EncryptedPassword = requestedPassword.EncryptedPassword,
+                DecryptedPasswordValue = Base64Decode(requestedPassword.EncryptedPassword)
+            };
+
             return result;
-        }        
+        }
 
 
         #region Private Methods

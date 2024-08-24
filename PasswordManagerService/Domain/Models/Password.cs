@@ -12,6 +12,11 @@
 
         public string? EncryptedPassword { get; set; }
 
-        public string? DecryptedPassword { get; set; }
+    }
+
+    public class DecryptedPassword : Password 
+    {
+        public string? DecryptedPasswordValue { get; set; }
+
     }
 }
