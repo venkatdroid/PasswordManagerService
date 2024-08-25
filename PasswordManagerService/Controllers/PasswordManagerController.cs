@@ -2,7 +2,6 @@
 using PasswordManagerService.Domain;
 using PasswordManagerService.Domain.Models;
 using System.Net;
-using EntityModel = PasswordManagerService.Repository.Models;
 
 namespace PasswordManagerService.Controllers
 {
@@ -25,7 +24,8 @@ namespace PasswordManagerService.Controllers
         {
             try
             {
-                List<EntityModel.Password> result = _processor.GetAllPasswords();
+                List<PasswordDetail> result = _processor.GetAllPasswords();
+                
                 return Ok(result);
             }
             catch (Exception ex) 
@@ -51,7 +51,7 @@ namespace PasswordManagerService.Controllers
                     return BadRequest("Id should be greater than zero");   
                 }
 
-                Password result = _processor.GetPasswordById(id);
+                PasswordDetail result = _processor.GetPasswordById(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -66,7 +66,7 @@ namespace PasswordManagerService.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns> Returns Requested Deccrypted Password </returns>
-        [HttpGet("{id}")]
+        [HttpGet("DecryptedPasswordDetail/{id}")]
         public IActionResult GetDecryptedPasswordById(long id) 
         {
             try
@@ -76,7 +76,7 @@ namespace PasswordManagerService.Controllers
                     return BadRequest("Id should be greater than zero");
                 }
 
-                Password result = _processor.GetDecryptedPasswordById(id);
+                PasswordDetail result = _processor.GetDecryptedPasswordById(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -92,7 +92,7 @@ namespace PasswordManagerService.Controllers
         /// <param name="passwordToBeCreated"></param>
         /// <returns>True if password is created</returns>
         [HttpPost]
-        public IActionResult CreatePassword([FromBody] Password passwordToBeCreated)
+        public IActionResult CreatePassword([FromBody] PasswordDetail passwordToBeCreated)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace PasswordManagerService.Controllers
         /// <param name="passwordToBeUpdated"></param>
         /// <returns>True if password is updated</returns>
         [HttpPut("{id}")]
-        public IActionResult UpdatePassword(int id, [FromBody] Password passwordToBeUpdated)
+        public IActionResult UpdatePassword(int id, [FromBody] PasswordDetail passwordToBeUpdated)
         {
             try
             {

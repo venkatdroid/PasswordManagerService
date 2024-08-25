@@ -15,12 +15,12 @@ namespace PasswordManagerService.Domain
             _queryRepository = queryRepository; 
         }
 
-        public bool CreatePassword(DomainModel.Password passwordToBeCreated)
+        public bool CreatePassword(DomainModel.PasswordDetail passwordToBeCreated)
         {
             return _commandRepository.CreateNewPassword(MapDomainModelToEntityModel(passwordToBeCreated));
         }
 
-        public bool UpdatePassword(long id, DomainModel.Password passwordToBeUpdated)
+        public bool UpdatePassword(long id, DomainModel.PasswordDetail passwordToBeUpdated)
         {
             EntityModel.Password exisitingPassword = _queryRepository.GetPasswordById(id);
 
@@ -32,7 +32,7 @@ namespace PasswordManagerService.Domain
             exisitingPassword.App = passwordToBeUpdated.App;
             exisitingPassword.Username = passwordToBeUpdated.Username;
             exisitingPassword.Category = passwordToBeUpdated.Category;
-            exisitingPassword.EncryptedPassword = Base64Decode(passwordToBeUpdated.EncryptedPassword);            
+            exisitingPassword.EncryptedPassword = Base64Decode(passwordToBeUpdated.Password);            
 
             return _commandRepository.UpdatePassword(exisitingPassword);
         }
@@ -42,12 +42,12 @@ namespace PasswordManagerService.Domain
             return _commandRepository.DeletePassword(Id);
         }
 
-        public List<EntityModel.Password> GetAllPasswords() 
+        public List<DomainModel.PasswordDetail> GetAllPasswords() 
         {
             return _queryRepository.GetAllPasswords();
         }
 
-        public DomainModel.Password GetPasswordById(long Id) 
+        public DomainModel.PasswordDetail GetPasswordById(long Id) 
         {
             EntityModel.Password requestedPassword = _queryRepository.GetPasswordById(Id);
 
@@ -56,12 +56,12 @@ namespace PasswordManagerService.Domain
                 throw new Exception("Id Not Found !");
             }
 
-            DomainModel.Password result = MapEntityModelToDomainModel(requestedPassword);
+            DomainModel.PasswordDetail result = MapEntityModelToDomainModel(requestedPassword);
 
             return result;
         }
 
-        public DomainModel.DecryptedPassword GetDecryptedPasswordById(long Id)
+        public DomainModel.DecryptedPasswordDetail GetDecryptedPasswordById(long Id)
         {
             EntityModel.Password requestedPassword = _queryRepository.GetPasswordById(Id);
 
@@ -70,12 +70,12 @@ namespace PasswordManagerService.Domain
                 throw new Exception("Id Not Found !");
             }
 
-            DomainModel.DecryptedPassword result = new DomainModel.DecryptedPassword()
+            DomainModel.DecryptedPasswordDetail result = new DomainModel.DecryptedPasswordDetail()
             {
                 App = requestedPassword.App,
                 Username = requestedPassword.Username,
                 Category = requestedPassword.Category,
-                EncryptedPassword = requestedPassword.EncryptedPassword,
+                Password = requestedPassword.EncryptedPassword,
                 DecryptedPasswordValue = Base64Decode(requestedPassword.EncryptedPassword)
             };
 
@@ -97,24 +97,26 @@ namespace PasswordManagerService.Domain
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
-        private DomainModel.Password MapEntityModelToDomainModel(EntityModel.Password entityModel) 
+        private DomainModel.PasswordDetail MapEntityModelToDomainModel(EntityModel.Password entityModel) 
         {
-            DomainModel.Password domainModel = new DomainModel.Password();
+            DomainModel.PasswordDetail domainModel = new DomainModel.PasswordDetail();
             domainModel.Id = entityModel.Id;
             domainModel.App = entityModel.App;
             domainModel.Username = entityModel.Username;
-            domainModel.EncryptedPassword = entityModel.EncryptedPassword;
+            domainModel.Category = entityModel.Category;
+            domainModel.Password = entityModel.EncryptedPassword;
 
             return domainModel;
         }
 
-        private EntityModel.Password MapDomainModelToEntityModel(DomainModel.Password domainModel)
+        private EntityModel.Password MapDomainModelToEntityModel(DomainModel.PasswordDetail domainModel)
         {
             EntityModel.Password entityModel = new EntityModel.Password();
             entityModel.Id = domainModel.Id;
             entityModel.App = domainModel.App;
             entityModel.Username = domainModel.Username;
-            entityModel.EncryptedPassword = Base64Encode(domainModel.EncryptedPassword);
+            entityModel.Category = domainModel.Category;
+            entityModel.EncryptedPassword = Base64Encode(domainModel.Password);
 
             return entityModel;
         }

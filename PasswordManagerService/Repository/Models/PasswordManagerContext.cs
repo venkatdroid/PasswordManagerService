@@ -17,7 +17,9 @@ public partial class PasswordManagerContext : DbContext
     public virtual DbSet<Password> Passwords { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=localhost,1433;Database=PasswordManager;User Id=SA;Password=Admin@123; TrustServerCertificate=True");
+    {
+         optionsBuilder.UseSqlServer("Server=localhost,1433;Database=PasswordManager;User Id=SA;Password=Admin@123; TrustServerCertificate=True");
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

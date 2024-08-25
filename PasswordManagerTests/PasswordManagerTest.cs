@@ -32,10 +32,10 @@ namespace PasswordManagerTests
         [Test]
         public void CreateaNewPassword_With_ValidData()
         {
-            DomainModel.Password password = new DomainModel.Password();
+            DomainModel.PasswordDetail password = new DomainModel.PasswordDetail();
             password.App = "TestApp";
             password.Username = "TestUsername";
-            password.EncryptedPassword = "TestPassword";
+            password.Password = "TestPassword";
 
             var result = passwordManagerController.CreatePassword(password) as ObjectResult;
             Assert.AreEqual((int)HttpStatusCode.Created, result.StatusCode);

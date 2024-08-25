@@ -1,6 +1,6 @@
 ﻿namespace PasswordManagerService.Domain.Models
 {
-    public class Password
+    public class PasswordDetail
     {
         public long Id { get; set; }
 
@@ -10,11 +10,11 @@
 
         public string? Username { get; set; }
 
-        public string? EncryptedPassword { get; set; }
+        public string? Password { get; set; }
 
     }
 
-    public class DecryptedPassword : Password 
+    public class DecryptedPasswordDetail : PasswordDetail 
     {
         public string? DecryptedPasswordValue { get; set; }
 

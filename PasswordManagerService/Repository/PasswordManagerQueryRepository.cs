@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PasswordManagerService.Repository.Models;
+using DomainModel = PasswordManagerService.Domain.Models; 
 
 namespace PasswordManagerService.Repository
 {
@@ -11,9 +12,19 @@ namespace PasswordManagerService.Repository
             _passwordManagerContext = passwordManagerContext;
         }
 
-        public List<Password> GetAllPasswords()
+        public List<DomainModel.PasswordDetail> GetAllPasswords()
         {
-            return _passwordManagerContext.Passwords.AsNoTracking().ToList();
+            List<DomainModel.PasswordDetail> result = (from password in _passwordManagerContext.Passwords.AsNoTracking()
+                          select new DomainModel.PasswordDetail
+                          {
+                              Id = password.Id,
+                              Username = password.Username,
+                              Password = password.EncryptedPassword,
+                              Category = password.Category,
+                              App = password.App
+                          }).ToList();
+
+            return result;
         }
 
         public Password GetPasswordById(long id)
