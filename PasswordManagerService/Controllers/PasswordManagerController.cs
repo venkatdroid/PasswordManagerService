@@ -16,6 +16,31 @@ namespace PasswordManagerService.Controllers
         }
 
         /// <summary>
+        /// Dummmy Data
+        /// </summary>
+        List<PasswordDetail> passwordDetails = new List<PasswordDetail>() 
+        {
+            new PasswordDetail 
+            {
+                Id = 1,
+                Category = "School",
+                App = "Messenger",
+                Username = "testuser@mytest.com",
+                Password = "TXlQYXNzd29yZEAxMjM="
+            },
+            new PasswordDetail
+            {
+                Id = 2,
+                Category = "Work",
+                App = "Outlook",
+                Username = "testuser@mytest.com",
+                Password = "TmV3UGFzc3dvcmRAMTIz"
+            },
+
+        };
+        long createIdValue = 3;
+
+        /// <summary>
         /// Gets All the passwords 
         /// </summary>
         /// <returns> List of Passwords </returns>
@@ -24,7 +49,8 @@ namespace PasswordManagerService.Controllers
         {
             try
             {
-                List<PasswordDetail> result = _processor.GetAllPasswords();
+               // List<PasswordDetail> result = _processor.GetAllPasswords();
+                List<PasswordDetail> result = passwordDetails;
                 
                 return Ok(result);
             }
@@ -51,7 +77,8 @@ namespace PasswordManagerService.Controllers
                     return BadRequest("Id should be greater than zero");   
                 }
 
-                PasswordDetail result = _processor.GetPasswordById(id);
+                //PasswordDetail result = _processor.GetPasswordById(id);
+                PasswordDetail result = passwordDetails.Find(x => x.Id == id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -76,7 +103,8 @@ namespace PasswordManagerService.Controllers
                     return BadRequest("Id should be greater than zero");
                 }
 
-                PasswordDetail result = _processor.GetDecryptedPasswordById(id);
+                //PasswordDetail result = _processor.GetDecryptedPasswordById(id);
+                PasswordDetail result = passwordDetails.Find(x => x.Id == id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -101,7 +129,11 @@ namespace PasswordManagerService.Controllers
                     return BadRequest();                    
                 }
 
-                bool result = _processor.CreatePassword(passwordToBeCreated);
+                //bool result = _processor.CreatePassword(passwordToBeCreated);
+                passwordToBeCreated.Id = ++createIdValue;
+                passwordDetails.Add(passwordToBeCreated);
+                var result = true;
+                
                 return CreatedAtRoute(passwordToBeCreated, result);
             }
             catch (Exception ex)
@@ -127,7 +159,16 @@ namespace PasswordManagerService.Controllers
                     return BadRequest();
                 }
 
-                bool result = _processor.UpdatePassword(id, passwordToBeUpdated);
+                //bool result = _processor.UpdatePassword(id, passwordToBeUpdated);
+
+                var existingPassword = passwordDetails.Find(x => x.Id == id);
+                if (existingPassword == null) throw new Exception("Id Not Found");
+
+                passwordDetails.Remove(existingPassword);
+                passwordDetails.Add(passwordToBeUpdated);
+
+                var result = true;
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -152,7 +193,12 @@ namespace PasswordManagerService.Controllers
                     return BadRequest();    
                 }
 
-                bool result = _processor.DeletePassword(id);
+                //bool result = _processor.DeletePassword(id);
+                var existingPassword = passwordDetails.Find(x => x.Id == id);
+                if (existingPassword == null) return BadRequest();
+                passwordDetails.Remove(existingPassword);
+                var result = true;
+
                 return Ok(result);
             }
             catch (Exception ex)
