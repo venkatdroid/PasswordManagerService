@@ -12,6 +12,19 @@ builder.Services.AddScoped<IPasswordManagerProcessor, PasswordManagerProcessor>(
 builder.Services.AddTransient<IPasswordManagerCommandRepository, PasswordManagerCommandRepository>();
 builder.Services.AddTransient<IPasswordManagerQueryRepository, PasswordManagerQueryRepository>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
+
+
 builder.Services.AddSwaggerGen(s =>
 {
     s.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -32,6 +45,8 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Password Manager Service");
     });
 }
+
+app.UseCors("AllowSpecificOrigin");
 
 app.UseHttpsRedirection();
 
